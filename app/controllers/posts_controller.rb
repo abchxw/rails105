@@ -2,6 +2,11 @@ class PostsController < ApplicationController
 
   before_filter :authenticate_user!, :only => [:new, :create]
 
+  def edit
+    @group = Group.find(params[:group_id])
+    @post = Post.find(params[:id])
+  end
+
   def new
     @group = Group.find(params[:group_id])
     @post = Post.new
@@ -20,6 +25,27 @@ class PostsController < ApplicationController
     end
   end
 
+  def update
+      @group = Group.find(params[:group_id])
+      @post = Post.find(params[:id])
+
+      if @post.update(post_params)
+        redirect_to account_posts_path(@group), alert: "Post updated"
+      else
+        render :edit
+      end
+    end
+
+  def destroy
+    @group = Group.find(params[:group_id])
+    @post = Post.find(params[:id])
+
+    if @post.destroy
+      redirect_to account_posts_path(@group), alert: "Post deleted"
+    else
+      render :edit
+    end
+  end
 
   private
 
