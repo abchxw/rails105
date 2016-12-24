@@ -11,13 +11,14 @@ class GroupsController < ApplicationController
 
   def show
     @group = Group.find(params[:id])
+    @posts = @group.posts
   end
 
   def edit
   end
 
   def create
-    @group = Group.new(group_params)
+    @group = current_user.groups.new(group_params)
     @group.user = current_user
 
     if @group.save
@@ -30,7 +31,7 @@ class GroupsController < ApplicationController
   def update
 
     if @group.update(group_params)
-       redirect_to groups_path,notice:"Update success"
+       redirect_to groups_path, notice: "Update success"
     else
       render :edit
     end
@@ -44,6 +45,7 @@ class GroupsController < ApplicationController
   end
 
   private
+
   def find_group_and_check_permission
     @group = Group.find(params[:id])
 
